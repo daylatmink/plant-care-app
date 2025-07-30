@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {SafeAreaView, StyleSheet, View, Text, TouchableOpacity, Dimensions, FlatList} from 'react-native'
 import Svg, { Circle } from 'react-native-svg'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -6,6 +6,8 @@ import { theme } from '../core/theme'
 import TopBar from "../components/TopBar";
 import Background from "../components/Background";
 import BottomBar from "../components/BottomBar";
+import Slider from '@react-native-community/slider'
+import { ScrollView } from 'react-native'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
@@ -20,6 +22,16 @@ export default function PlantDetail({ route, navigation }) {
     const circumference = 2 * Math.PI * radius
     const strokeDashoffset = circumference - (circumference * plant.progress)
 
+    const [lightLevel, setLightLevel] = useState(30);
+    const [tempLight, setTempLight] = useState(30);
+
+    const [humidityLevel, setHumidityLevel] = useState(45);
+    const [tempHumidity, setTempHumidity] = useState(45);
+
+    const [phLevel, setPhLevel] = useState(7);
+    const [tempPh, setTempPh] = useState(7);
+
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.surface }}>
             {/* 🔝 Thanh menu trên cùng */}
@@ -31,6 +43,9 @@ export default function PlantDetail({ route, navigation }) {
 
             {/* 🌱 Main Content */}
             <Background style={styles.background}>
+                <ScrollView
+                    contentContainerStyle={styles.scrollContent}
+                    showsVerticalScrollIndicator={false} >
                 <View style={styles.contentContainer}>
                     {/* Vòng progress + icon */}
                     <View style={[styles.circleContainer, { width: size, height: size, borderRadius: size / 2 }]}>
@@ -68,13 +83,99 @@ export default function PlantDetail({ route, navigation }) {
                     <Text style={styles.name}>{plant.name}</Text>
                     <Text style={styles.day}>{`Day ${plant.currentDay} of ${plant.totalDays}`}</Text>
 
-                    {/* Nút Harvest */}
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => console.log('Harvest', plant.name)}
-                    >
-                        <Text style={styles.buttonText}>Harvest</Text>
-                    </TouchableOpacity>
+                    {/* Slider */}
+                    {/* Slider */}
+                    <View style={styles.slidersContainer}>
+
+                        {/* 🌞 Slider ánh sáng */}
+                        <View style={styles.sliderRow}>
+                            <MaterialCommunityIcons
+                                name="white-balance-sunny"
+                                size={20}
+                                color="#FFA000"
+                                style={styles.sliderIcon}
+                            />
+                            <Text style={styles.sliderLabel}>
+                                Nhiệt độ: {tempLight.toFixed(0)}℃
+                            </Text>
+                        </View>
+                        <Slider
+                            style={styles.slider}
+                            minimumValue={25}
+                            maximumValue={40}
+                            step={0.1}
+                            value={lightLevel}                         // giá trị thực
+                            onValueChange={(val) => setTempLight(val)} // update khi kéo
+                            onSlidingComplete={(val) => setLightLevel(val)} // chỉ set chính thức khi thả tay
+                            minimumTrackTintColor="#FFD700"
+                            maximumTrackTintColor="#ddd"
+                            thumbTintColor="#FFD700"
+                        />
+
+                        {/* 💧 Slider độ ẩm */}
+                        <View style={styles.sliderRow}>
+                            <MaterialCommunityIcons
+                                name="water-percent"
+                                size={20}
+                                color="#4FC3F7"
+                                style={styles.sliderIcon}
+                            />
+                            <Text style={styles.sliderLabel}>
+                                Độ ẩm: {tempHumidity.toFixed(0)}%
+                            </Text>
+                        </View>
+                        <Slider
+                            style={styles.slider}
+                            minimumValue={0}
+                            maximumValue={100}
+                            step={1}
+                            value={humidityLevel}
+                            onValueChange={(val) => setTempHumidity(val)}
+                            onSlidingComplete={(val) => setHumidityLevel(val)}
+                            minimumTrackTintColor="#4FC3F7"
+                            maximumTrackTintColor="#ddd"
+                            thumbTintColor="#4FC3F7"
+                        />
+
+                        {/* ⚗️ Slider pH */}
+                        <View style={styles.sliderRow}>
+                            <MaterialCommunityIcons
+                                name="flask-outline"
+                                size={20}
+                                color="#8BC34A"
+                                style={styles.sliderIcon}
+                            />
+                            <Text style={styles.sliderLabel}>
+                                Độ pH: {tempPh.toFixed(1)}
+                            </Text>
+                        </View>
+                        <Slider
+                            style={styles.slider}
+                            minimumValue={0}
+                            maximumValue={14}
+                            step={0.1}
+                            value={phLevel}
+                            onValueChange={(val) => setTempPh(val)}
+                            onSlidingComplete={(val) => setPhLevel(val)}
+                            minimumTrackTintColor="#8BC34A"
+                            maximumTrackTintColor="#ddd"
+                            thumbTintColor="#8BC34A"
+                        />
+                    </View>
+
+
+                    <View style={styles.nutrientContainer}>
+                        <View style={[styles.nutrientChip, { backgroundColor: '#FFE082' }]}>
+                            <Text style={styles.nutrientText}>K: 150 ppm</Text>
+                        </View>
+                        <View style={[styles.nutrientChip, { backgroundColor: '#B3E5FC' }]}>
+                            <Text style={styles.nutrientText}>Na: 30 ppm</Text>
+                        </View>
+                        <View style={[styles.nutrientChip, { backgroundColor: '#C8E6C9' }]}>
+                            <Text style={styles.nutrientText}>P: 45 ppm</Text>
+                        </View>
+                    </View>
+
 
                     {/* Thông tin chi tiết */}
                     <View style={styles.detailContainer}>
@@ -88,6 +189,7 @@ export default function PlantDetail({ route, navigation }) {
                         </View>
                     </View>
                 </View>
+                </ScrollView>
             </Background>
 
             {/* 🔻 Thanh bottom bar */}
@@ -160,5 +262,45 @@ const styles = StyleSheet.create({
     },
     detailValue: {
         color: theme.colors.text,
+    },
+    slidersContainer: {
+        marginTop: 20,
+        width: '80%',
+    },
+    slider: {
+        width: '100%',
+        height: 40,
+        marginVertical: 10,
+    },
+    sliderLabel: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#333',
+        marginBottom: -5
+    },
+    nutrientContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 20,
+        gap: 10,               // khoảng cách giữa các chip (React Native 0.71+ mới hỗ trợ)
+    },
+    nutrientChip: {
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 2,          // bóng nhẹ cho chip
+    },
+    nutrientText: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#333',
+    },
+    scrollContent: {
+        alignItems: 'center',
+        paddingVertical: screenHeight * 0.05,
+        paddingBottom: 50,   // thêm khoảng trống dưới để không bị dính sát BottomBar
     }
+
 })

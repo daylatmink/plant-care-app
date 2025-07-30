@@ -112,7 +112,7 @@ export default function Profile({ navigation }) {
                                 color={theme.colors.primary}
                             />
                             <View style={styles.rowText}>
-                                <Text style={styles.rowLabel}>Le Khoi manh</Text>
+                                <Text style={styles.rowLabel}>Le Khoi Manh</Text>
                                 <Text style={styles.rowSubLabel}>MSSV: 20236233</Text>
                             </View>
                             <Text style={styles.rowAction}>Team member</Text>

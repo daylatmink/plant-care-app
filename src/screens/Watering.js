@@ -6,15 +6,12 @@ import BottomBar from '../components/BottomBar'
 import Svg, { Circle } from 'react-native-svg'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { theme } from '../core/theme'
-
+import Slider from '@react-native-community/slider'
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
 export default function Watering({ navigation }) {
-    const [waterLevel, setWaterLevel] = useState(45)
-    const [selected, setSelected] = useState('light')
-    const [isWaterIconAnimating, setIsWaterIconAnimating] = useState(false)
-    const [isCircleAnimating, setIsCircleAnimating] = useState(false)
 
+    const [waterLevel, setWaterLevel] = useState(45)
     const size = screenWidth * 0.5
     const radius = size / 2
     const buttonSize = screenWidth * 0.3
@@ -34,6 +31,18 @@ export default function Watering({ navigation }) {
     const wateringScale = useState(new Animated.Value(1))[0]
     const wateringOpacity = useState(new Animated.Value(0))[0]
     const pouringWater = useState(new Animated.Value(0))[0]
+
+    // State chính (giá trị được “lưu”)
+    const [lightLevel, setLightLevel] = useState(30);
+    const [humidityLevel, setHumidityLevel] = useState(45);
+    const [phLevel, setPhLevel] = useState(7);
+
+    // State tạm (hiển thị trong khi kéo)
+    const [tempLight, setTempLight] = useState(50);
+    const [tempHumidity, setTempHumidity] = useState(45);
+    const [tempPh, setTempPh] = useState(7);
+
+
 
     const waterIconSize = size * 0.4
 
@@ -330,63 +339,61 @@ export default function Watering({ navigation }) {
                         top: size * 0.65,
                     }]}>{waterLevel}%</Text>
                 </View>
+                <View style={styles.slidersContainer}>
+                    {/* Slider ánh sáng */}
+                    {/* Slider trong Watering */}
+                    <View style={styles.slidersContainer}>
 
-                {/* ⚡ LIGHT & DIM buttons */}
-                <View style={styles.buttonsContainer}>
-                    {/* LIGHT */}
-                    <Animated.View style={{ transform: [{ scale: lightScale }] }}>
-                        <TouchableOpacity
-                            style={[
-                                styles.button,
-                                {
-                                    width: buttonSize,
-                                    height: buttonSize,
-                                    borderRadius: buttonSize * 0.25,
-                                    backgroundColor: selected === 'light' ? theme.colors.primary : '#607D8B',
-                                },
-                            ]}
-                            onPress={() => handlePress('light')}
-                        >
-                            <MaterialCommunityIcons
-                                name="lightbulb-on-outline"
-                                size={buttonSize * 0.4}
-                                color="#fff"
-                            />
-                            <Text style={[styles.buttonText, { fontSize: buttonSize * 0.2 }]}>LIGHT</Text>
+                        {/* 🌞 Slider ánh sáng */}
+                        <Text style={styles.sliderLabel}>Nhiệt độ: {tempLight.toFixed(1)}℃</Text>
+                        <Slider
+                            style={styles.slider}
+                            minimumValue={25}
+                            maximumValue={40}
+                            step={0.1}
+                            value={lightLevel}                              // giá trị chính thức
+                            onValueChange={(val) => setTempLight(val)}      // chỉ update tạm khi kéo
+                            onSlidingComplete={(val) => setLightLevel(val)} // update chính thức khi thả tay
+                            minimumTrackTintColor="#FFD700"
+                            maximumTrackTintColor="#ddd"
+                            thumbTintColor="#FFD700"
+                        />
 
-                            <View style={[styles.radioOuter, { top: buttonSize * 0.05 }]}>
-                                {selected === 'light' && <View style={styles.radioInner} />}
-                            </View>
-                        </TouchableOpacity>
-                    </Animated.View>
+                        {/* 💧 Slider độ ẩm */}
+                        <Text style={styles.sliderLabel}>Độ ẩm: {tempHumidity.toFixed(0)}%</Text>
+                        <Slider
+                            style={styles.slider}
+                            minimumValue={0}
+                            maximumValue={100}
+                            step={1}
+                            value={humidityLevel}
+                            onValueChange={(val) => setTempHumidity(val)}
+                            onSlidingComplete={(val) => setHumidityLevel(val)}
+                            minimumTrackTintColor="#4FC3F7"
+                            maximumTrackTintColor="#ddd"
+                            thumbTintColor="#4FC3F7"
+                        />
 
-                    {/* DIM */}
-                    <Animated.View style={{ transform: [{ scale: dimScale }] }}>
-                        <TouchableOpacity
-                            style={[
-                                styles.button,
-                                {
-                                    width: buttonSize,
-                                    height: buttonSize,
-                                    borderRadius: buttonSize * 0.25,
-                                    backgroundColor: selected === 'dim' ? theme.colors.primary : '#607D8B',
-                                },
-                            ]}
-                            onPress={() => handlePress('dim')}
-                        >
-                            <MaterialCommunityIcons
-                                name="brightness-6"
-                                size={buttonSize * 0.4}
-                                color="#fff"
-                            />
-                            <Text style={[styles.buttonText, { fontSize: buttonSize * 0.2 }]}>DIM</Text>
+                        {/* ⚗️ Slider pH */}
+                        <Text style={styles.sliderLabel}>Độ pH: {tempPh.toFixed(1)}</Text>
+                        <Slider
+                            style={styles.slider}
+                            minimumValue={0}
+                            maximumValue={14}
+                            step={0.1}
+                            value={phLevel}
+                            onValueChange={(val) => setTempPh(val)}
+                            onSlidingComplete={(val) => setPhLevel(val)}
+                            minimumTrackTintColor="#8BC34A"
+                            maximumTrackTintColor="#ddd"
+                            thumbTintColor="#8BC34A"
+                        />
+                    </View>
 
-                            <View style={[styles.radioOuter, { top: buttonSize * 0.05 }]}>
-                                {selected === 'dim' && <View style={styles.radioInner} />}
-                            </View>
-                        </TouchableOpacity>
-                    </Animated.View>
                 </View>
+
+
+
             </Background>
 
             <BottomBar navigation={navigation} current="water-outline" />
@@ -535,4 +542,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         zIndex: 9
     },
+    slidersContainer: {
+        marginTop: 20,
+        width: '80%',
+    },
+    slider: {
+        width: '100%',
+        height: 40,
+        marginVertical: 10,
+    },
+    sliderLabel: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#333',
+        marginBottom: -5
+    },
+
 })
