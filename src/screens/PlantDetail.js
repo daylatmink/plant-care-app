@@ -46,149 +46,154 @@ export default function PlantDetail({ route, navigation }) {
                 <ScrollView
                     contentContainerStyle={styles.scrollContent}
                     showsVerticalScrollIndicator={false} >
-                <View style={styles.contentContainer}>
-                    {/* Vòng progress + icon */}
-                    <View style={[styles.circleContainer, { width: size, height: size, borderRadius: size / 2 }]}>
-                        <Svg height={size} width={size} style={styles.progressSvg}>
-                            <Circle
-                                stroke="#eee"
-                                fill="none"
-                                cx={size / 2}
-                                cy={size / 2}
-                                r={radius}
-                                strokeWidth={strokeWidth}
-                            />
-                            <Circle
-                                stroke={theme.colors.primary}
-                                fill="none"
-                                cx={size / 2}
-                                cy={size / 2}
-                                r={radius}
-                                strokeWidth={strokeWidth}
-                                strokeDasharray={`${circumference} ${circumference}`}
-                                strokeDashoffset={strokeDashoffset}
-                                strokeLinecap="round"
-                            />
-                        </Svg>
-                        <View style={styles.iconContainer}>
-                            <MaterialCommunityIcons
-                                name={plant.icon}
-                                size={size * 0.4}
-                                color={theme.colors.primary}
-                            />
+                    <View style={styles.contentContainer}>
+                        {/* Vòng progress + icon */}
+                        <View style={[styles.circleContainer, { width: size, height: size, borderRadius: size / 2 }]}>
+                            <Svg height={size} width={size} style={styles.progressSvg}>
+                                <Circle
+                                    stroke="#eee"
+                                    fill="none"
+                                    cx={size / 2}
+                                    cy={size / 2}
+                                    r={radius}
+                                    strokeWidth={strokeWidth}
+                                />
+                                <Circle
+                                    stroke={theme.colors.primary}
+                                    fill="none"
+                                    cx={size / 2}
+                                    cy={size / 2}
+                                    r={radius}
+                                    strokeWidth={strokeWidth}
+                                    strokeDasharray={`${circumference} ${circumference}`}
+                                    strokeDashoffset={strokeDashoffset}
+                                    strokeLinecap="round"
+                                />
+                            </Svg>
+                            <View style={styles.iconContainer}>
+                                <MaterialCommunityIcons
+                                    name={plant.icon}
+                                    size={size * 0.4}
+                                    color={theme.colors.primary}
+                                />
+                            </View>
+                        </View>
+
+                        {/* Tên và ngày */}
+                        <Text style={styles.name}>{plant.name}</Text>
+                        <Text style={styles.day}>{`Day ${plant.currentDay} of ${plant.totalDays}`}</Text>
+
+                        {/* Slider */}
+                        <View style={styles.slidersContainer}>
+
+                            {/* 🌞 Slider ánh sáng */}
+                            <View style={styles.sliderSection}>
+                                <Text style={styles.sliderLabel}>
+                                    Nhiệt độ: {tempLight.toFixed(0)}℃
+                                </Text>
+                                <View style={styles.sliderRow}>
+                                    <MaterialCommunityIcons
+                                        name="white-balance-sunny"
+                                        size={20}
+                                        color="#FFA000"
+                                        style={styles.sliderIcon}
+                                    />
+                                    <Slider
+                                        style={styles.slider}
+                                        minimumValue={25}
+                                        maximumValue={40}
+                                        step={0.1}
+                                        value={lightLevel}                         // giá trị thực
+                                        onValueChange={(val) => setTempLight(val)} // update khi kéo
+                                        onSlidingComplete={(val) => setLightLevel(val)} // chỉ set chính thức khi thả tay
+                                        minimumTrackTintColor="#FFD700"
+                                        maximumTrackTintColor="#ddd"
+                                        thumbTintColor="#FFD700"
+                                    />
+                                </View>
+                            </View>
+
+                            {/* 💧 Slider độ ẩm */}
+                            <View style={styles.sliderSection}>
+                                <Text style={styles.sliderLabel}>
+                                    Độ ẩm: {tempHumidity.toFixed(0)}%
+                                </Text>
+                                <View style={styles.sliderRow}>
+                                    <MaterialCommunityIcons
+                                        name="water-percent"
+                                        size={20}
+                                        color="#4FC3F7"
+                                        style={styles.sliderIcon}
+                                    />
+                                    <Slider
+                                        style={styles.slider}
+                                        minimumValue={0}
+                                        maximumValue={100}
+                                        step={1}
+                                        value={humidityLevel}
+                                        onValueChange={(val) => setTempHumidity(val)}
+                                        onSlidingComplete={(val) => setHumidityLevel(val)}
+                                        minimumTrackTintColor="#4FC3F7"
+                                        maximumTrackTintColor="#ddd"
+                                        thumbTintColor="#4FC3F7"
+                                    />
+                                </View>
+                            </View>
+
+                            {/* ⚗️ Slider pH */}
+                            <View style={styles.sliderSection}>
+                                <Text style={styles.sliderLabel}>
+                                    Độ pH: {tempPh.toFixed(1)}
+                                </Text>
+                                <View style={styles.sliderRow}>
+                                    <MaterialCommunityIcons
+                                        name="flask-outline"
+                                        size={20}
+                                        color="#8BC34A"
+                                        style={styles.sliderIcon}
+                                    />
+                                    <Slider
+                                        style={styles.slider}
+                                        minimumValue={0}
+                                        maximumValue={14}
+                                        step={0.1}
+                                        value={phLevel}
+                                        onValueChange={(val) => setTempPh(val)}
+                                        onSlidingComplete={(val) => setPhLevel(val)}
+                                        minimumTrackTintColor="#8BC34A"
+                                        maximumTrackTintColor="#ddd"
+                                        thumbTintColor="#8BC34A"
+                                    />
+                                </View>
+                            </View>
+                        </View>
+
+
+                        <View style={styles.nutrientContainer}>
+                            <View style={[styles.nutrientChip, { backgroundColor: '#FFE082' }]}>
+                                <Text style={styles.nutrientText}>K: 150 ppm</Text>
+                            </View>
+                            <View style={[styles.nutrientChip, { backgroundColor: '#B3E5FC' }]}>
+                                <Text style={styles.nutrientText}>Na: 30 ppm</Text>
+                            </View>
+                            <View style={[styles.nutrientChip, { backgroundColor: '#C8E6C9' }]}>
+                                <Text style={styles.nutrientText}>P: 45 ppm</Text>
+                            </View>
+                        </View>
+
+
+                        {/* Thông tin chi tiết */}
+                        <View style={styles.detailContainer}>
+                            <View style={styles.detailRow}>
+                                <Text style={styles.detailLabel}>Grows:</Text>
+                                <Text style={styles.detailValue}>{plant.grows}</Text>
+                            </View>
+                            <View style={styles.detailRow}>
+                                <Text style={styles.detailLabel}>Germinates in:</Text>
+                                <Text style={styles.detailValue}>{plant.currentDay < 20 ? (20 - plant.currentDay) : 0} days</Text>
+                            </View>
                         </View>
                     </View>
-
-                    {/* Tên và ngày */}
-                    <Text style={styles.name}>{plant.name}</Text>
-                    <Text style={styles.day}>{`Day ${plant.currentDay} of ${plant.totalDays}`}</Text>
-
-                    {/* Slider */}
-                    {/* Slider */}
-                    <View style={styles.slidersContainer}>
-
-                        {/* 🌞 Slider ánh sáng */}
-                        <View style={styles.sliderRow}>
-                            <MaterialCommunityIcons
-                                name="white-balance-sunny"
-                                size={20}
-                                color="#FFA000"
-                                style={styles.sliderIcon}
-                            />
-                            <Text style={styles.sliderLabel}>
-                                Nhiệt độ: {tempLight.toFixed(0)}℃
-                            </Text>
-                        </View>
-                        <Slider
-                            style={styles.slider}
-                            minimumValue={25}
-                            maximumValue={40}
-                            step={0.1}
-                            value={lightLevel}                         // giá trị thực
-                            onValueChange={(val) => setTempLight(val)} // update khi kéo
-                            onSlidingComplete={(val) => setLightLevel(val)} // chỉ set chính thức khi thả tay
-                            minimumTrackTintColor="#FFD700"
-                            maximumTrackTintColor="#ddd"
-                            thumbTintColor="#FFD700"
-                        />
-
-                        {/* 💧 Slider độ ẩm */}
-                        <View style={styles.sliderRow}>
-                            <MaterialCommunityIcons
-                                name="water-percent"
-                                size={20}
-                                color="#4FC3F7"
-                                style={styles.sliderIcon}
-                            />
-                            <Text style={styles.sliderLabel}>
-                                Độ ẩm: {tempHumidity.toFixed(0)}%
-                            </Text>
-                        </View>
-                        <Slider
-                            style={styles.slider}
-                            minimumValue={0}
-                            maximumValue={100}
-                            step={1}
-                            value={humidityLevel}
-                            onValueChange={(val) => setTempHumidity(val)}
-                            onSlidingComplete={(val) => setHumidityLevel(val)}
-                            minimumTrackTintColor="#4FC3F7"
-                            maximumTrackTintColor="#ddd"
-                            thumbTintColor="#4FC3F7"
-                        />
-
-                        {/* ⚗️ Slider pH */}
-                        <View style={styles.sliderRow}>
-                            <MaterialCommunityIcons
-                                name="flask-outline"
-                                size={20}
-                                color="#8BC34A"
-                                style={styles.sliderIcon}
-                            />
-                            <Text style={styles.sliderLabel}>
-                                Độ pH: {tempPh.toFixed(1)}
-                            </Text>
-                        </View>
-                        <Slider
-                            style={styles.slider}
-                            minimumValue={0}
-                            maximumValue={14}
-                            step={0.1}
-                            value={phLevel}
-                            onValueChange={(val) => setTempPh(val)}
-                            onSlidingComplete={(val) => setPhLevel(val)}
-                            minimumTrackTintColor="#8BC34A"
-                            maximumTrackTintColor="#ddd"
-                            thumbTintColor="#8BC34A"
-                        />
-                    </View>
-
-
-                    <View style={styles.nutrientContainer}>
-                        <View style={[styles.nutrientChip, { backgroundColor: '#FFE082' }]}>
-                            <Text style={styles.nutrientText}>K: 150 ppm</Text>
-                        </View>
-                        <View style={[styles.nutrientChip, { backgroundColor: '#B3E5FC' }]}>
-                            <Text style={styles.nutrientText}>Na: 30 ppm</Text>
-                        </View>
-                        <View style={[styles.nutrientChip, { backgroundColor: '#C8E6C9' }]}>
-                            <Text style={styles.nutrientText}>P: 45 ppm</Text>
-                        </View>
-                    </View>
-
-
-                    {/* Thông tin chi tiết */}
-                    <View style={styles.detailContainer}>
-                        <View style={styles.detailRow}>
-                            <Text style={styles.detailLabel}>Grows:</Text>
-                            <Text style={styles.detailValue}>{plant.grows}</Text>
-                        </View>
-                        <View style={styles.detailRow}>
-                            <Text style={styles.detailLabel}>Germinates in:</Text>
-                            <Text style={styles.detailValue}>{plant.currentDay < 20 ? (20 - plant.currentDay) : 0} days</Text>
-                        </View>
-                    </View>
-                </View>
                 </ScrollView>
             </Background>
 
@@ -207,15 +212,15 @@ const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-evenly', // Di chuyển space-evenly vào đây
-        paddingVertical: screenHeight * 0.05, // Thêm padding để tạo khoảng trống
+        justifyContent: 'flex-start', // Thay đổi từ space-evenly thành flex-start
+        paddingVertical: screenHeight * 0.02, // Giảm padding để icon cây gần TopBar hơn
         width: '100%',
     },
     circleContainer: {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: theme.colors.surface,
-        elevation: 4,
+        elevation: 4
     },
     progressSvg: {
         position: 'absolute',
@@ -230,11 +235,13 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: theme.colors.primary,
         textAlign: 'center',
+        marginTop: 20, // Thêm khoảng cách với vòng tròn
     },
     day: {
         fontSize: screenWidth * 0.05,
         color: theme.colors.text,
         textAlign: 'center',
+        marginBottom: 30, // Thêm khoảng cách với phần slider
     },
     button: {
         backgroundColor: theme.colors.primary,
@@ -267,21 +274,32 @@ const styles = StyleSheet.create({
         marginTop: 20,
         width: '80%',
     },
+    sliderSection: {
+        marginVertical: 15,
+
+    },
+    sliderRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 5,
+    },
+    sliderIcon: {
+        marginRight: 0, // Giảm từ 12 xuống 8 để icon gần slider hơn
+    },
     slider: {
-        width: '100%',
+        flex: 1,
         height: 40,
-        marginVertical: 10,
     },
     sliderLabel: {
         fontSize: 16,
         fontWeight: '600',
         color: '#333',
-        marginBottom: -5
+        marginBottom: 5,
     },
     nutrientContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 20,
+        marginTop: 40, // Thêm khoảng cách với phần slider
         gap: 10,               // khoảng cách giữa các chip (React Native 0.71+ mới hỗ trợ)
     },
     nutrientChip: {

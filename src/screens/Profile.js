@@ -149,6 +149,21 @@ export default function Profile({ navigation }) {
                         </View>
                         <View style={styles.separator} />
                     </View>
+                    <View style={styles.rowContainer}>
+                        <View style={styles.rowContent}>
+                            <MaterialCommunityIcons
+                                name="account"
+                                size={24}
+                                color={theme.colors.primary}
+                            />
+                            <View style={styles.rowText}>
+                                <Text style={styles.rowLabel}>Trieu Tien Thanh</Text>
+                                <Text style={styles.rowSubLabel}>MSSV: 20237390</Text>
+                            </View>
+                            <Text style={styles.rowAction}>Team member</Text>
+                        </View>
+                        <View style={styles.separator} />
+                    </View>
                 </ScrollView>
             </Background>
 
